@@ -263,4 +263,3 @@ byte nextBrightness(boolean resetVal) {
 
   return brightVals[currentBrightness];
 }
-

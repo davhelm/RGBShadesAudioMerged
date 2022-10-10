@@ -43,7 +43,7 @@
 #define CHIPSET     WS2811
 
 // Global maximum brightness value, maximum 255
-#define MAXBRIGHTNESS 72
+#define MAXBRIGHTNESS 64 //72
 #define STARTBRIGHTNESS 2
 
 // Cycle time (milliseconds between pattern changes)
@@ -74,32 +74,37 @@ functionList effectListAudio[] = {
                                   audioStripes,
                                   audioCirc,
                                   drawVU,
-                                  //RGBpulse,
+                                  RGBpulse,
                                   audioPlasma,
                                   drawAnalyzer
                                  };
 
 functionList effectListNoAudio[] = {
                                     shadesOutline,
+                                    radiateCenter,
                                     threeSine,
-                                    //drawVU,
+                                    ////drawVU,
                                     threeDee,
-                                    hearts,
+                                    //hearts,
                                     //scrollTextZero,
                                     plasma,
-                                    //RGBpulse,
+                                    ////RGBpulse,
                                     confetti,
-                                    //audioCirc,
+                                    ////audioCirc,
                                     rider,
                                     //scrollTextOne,
                                     glitter,
-                                    //drawAnalyzer,
+                                    ////drawAnalyzer,
                                     slantBars,
                                     //scrollTextTwo,
-                                    //audioPlasma,
+                                    ////audioPlasma,
                                     colorFill,
-                                    //audioStripes,
-                                    sideRain
+                                    ////audioStripes,
+                                    sideRain,
+                                    swirls,
+                                    //pacman,
+                                    hueRotation
+                                    //pumpkin
                                    };
 
 
@@ -207,8 +212,3 @@ void loop()
   FastLED.show(); // send the contents of the led memory to the LEDs
 
 }
-
-
-
-
-

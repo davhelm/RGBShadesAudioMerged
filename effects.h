@@ -235,6 +235,146 @@ void confetti() {
 
 }
 
+// @jgarland79
+// https://github.com/macetech/RGBShades/pull/14
+// Pacman
+const uint8_t Ghost[] = {10, 11, 12, 19, 17, 15, 38,
+   39, 40, 41, 42, 49, 48, 47, 46, 45, 63, 65, 67};
+const uint8_t PacManClosed[] = {1, 2, 3, 28, 27, 26, 25,
+   24, 31, 32, 33, 34, 35, 56, 55, 54, 53, 52, 59, 60, 61};
+const uint8_t PacManMouth[] = {25, 24, 33, 34, 35, 53, 52};
+const uint8_t Pellets1[] = {34, 36};
+const uint8_t Pellets2[] = {35, 37, 43};
+int pacman_step = 0;
+void pacman() {
+   if (effectInit == false) {
+    effectInit = true;
+    effectDelay = 175;
+    FastLED.clear();
+   }
+   if (pacman_step==3)
+    pacman_step = 0;
+   if (pacman_step == 0) {
+    for (int x = 0; x < 2; x++) {
+     leds[Pellets1[x]] = CRGB::White;
+    }
+    for (int x = 0; x < 3; x++) {
+     leds[Pellets2[x]] = CRGB::Black;
+    }
+    for (int x = 0; x < 21; x++) {
+     leds[PacManClosed[x]] = CRGB::Yellow;
+    }
+    for (int x = 0; x < 7; x++) {
+     leds[PacManMouth[x]] = CRGB::Black;
+    }
+    for (int x = 0; x < 19; x++) {
+     leds[Ghost[x]] = CRGB::Blue;
+    }
+   }
+   if (pacman_step == 1) {
+    for (int x = 0; x < 2; x++) {
+     leds[Pellets1[x]] = CRGB::Black;
+    }
+    for (int x = 0; x < 3; x++) {
+     leds[Pellets2[x]] = CRGB::White;
+    }
+   }
+   if (pacman_step == 2) {
+    for (int x = 0; x < 2; x++) {
+     leds[Pellets1[x]] = CRGB::White;
+    }
+    for (int x = 0; x < 3; x++) {
+     leds[Pellets2[x]] = CRGB::Black;
+    }
+    for (int x = 0; x < 21; x++) {
+     leds[PacManClosed[x]] = CRGB::Yellow;
+    }
+   }
+   pacman_step++;
+}
+
+// @westwind79
+// https://github.com/macetech/RGBShades/pull/16
+// Hue Rotation
+void hueRotation() {
+
+  // startup tasks
+  if (effectInit == false) {
+    effectInit = true;
+    effectDelay = 60; 
+  }
+
+  fillAll(CHSV(cycleHue, 255, 255));
+}
+
+// @westwind79
+// https://github.com/macetech/RGBShades/pull/17
+// radiating inward rainbow colors
+void radiateCenter() {
+  static byte offset  = 9; // counter for radial color wave motion
+  static int plasVector = 0; // counter for orbiting plasma center
+
+  // startup tasks
+  if (effectInit == false) {
+    effectInit = true;
+    effectDelay = 0;
+  }
+
+  int xOffset = 0;
+  int yOffset = 4;
+
+  // Draw one frame of the animation into the LED array
+  for (int x = 0; x < kMatrixWidth; x++) {
+    for (int y = 0; y < kMatrixHeight; y++) {
+      byte color = sin8(sqrt(sq(((float)x - 7.5) * 12 + xOffset) + sq(((float)y - 2) * 12 + yOffset)) + offset);
+      leds[XY(x, y)] = ColorFromPalette(currentPalette, color, 255);
+    }
+  }
+  offset--; // wraps at 255 for sin8
+  plasVector += 1; // using an int for slower orbit (wraps at 65536)
+}
+
+// @westwind79
+// https://github.com/macetech/RGBShades/pull/18
+void swirls() {
+  static boolean erase = false;
+  static uint8_t x, y, z = 0;
+  static uint8_t currentColor = 0;
+  //startup tasks
+  if (effectInit == false) {
+    effectInit = true;
+    erase = false;
+    x = 0;
+    y = 0;
+    z = 0;
+    effectDelay = 15;
+    FastLED.clear(); 
+    currentPalette = RainbowColors_p; 
+  }
+
+  const uint8_t OutlineTable[] = {
+    6,5,4,3,2,1,0,29,30,57,58,59,60,61,62,51,36,22,23,24,25,26,27,28,31,56,55,54,53,52,35,34,33,32,31
+  };
+  const uint8_t OutlineTable2[] = {
+    7,8,9,10,11,12,13,14,43,44,67,66,65,64,63,50,37,21,20,19,18,17,16,15,42,45,46,47,48,49,38,39,40,41
+  };
+
+  leds[OutlineTable[x]] = currentPalette[currentColor];
+  leds[OutlineTable2[y]] = currentPalette[currentColor];
+  if (erase)    
+    leds[OutlineTable[x]] = currentPalette[currentColor];
+    leds[OutlineTable2[y]] = currentPalette[currentColor];
+  x++;
+  y++;
+  if (x == (sizeof(OutlineTable)) || y == (sizeof(OutlineTable2))) {
+    erase = !erase;
+    x = 0; 
+    y = 0;
+    currentColor += random8(3, 6);
+     if (currentColor > 15) currentColor -= 16;
+  }
+}
+
 
 // Draw slanting bars scrolling across the array, uses current hue
 void slantBars() {
@@ -250,7 +390,8 @@ void slantBars() {
 
   for (byte x = 0; x < kMatrixWidth; x++) {
     for (byte y = 0; y < kMatrixHeight; y++) {
-      leds[XY(x, y)] = CHSV(cycleHue, 255, sin8(x * 32 + y * 32 + slantPos));
+      //leds[XY(x, y)] = CHSV(cycleHue, 255, sin8(x * 32 + y * 32 + slantPos));
+      leds[XY(x, y)] = CHSV(cycleHue, 255, quadwave8(x * 32 + y * 32 + slantPos));
     }
   }
 
@@ -274,7 +415,7 @@ void scrollText(byte message, byte style, CRGB fgColor, CRGB bgColor) {
   // startup tasks
   if (effectInit == false) {
     effectInit = true;
-    effectDelay = 35;
+    effectDelay = 100; //35;
     currentMessageChar = 0;
     currentCharColumn = 0;
     selectFlashString(message);
@@ -338,7 +479,45 @@ void scrollTextTwo() {
   scrollText(2, NORMAL, CRGB::Green, CRGB(0,0,8));
 }
 
+// Draw jack-o'-lantern eyes with flickering orange pattern
+const byte pumpkinBitmap[5] = {
+  0b00010000,
+  0b00111000,
+  0b01111100,
+  0b11111110,
+  0b00000000 };
+  
+void pumpkin() {
 
+  // startup tasks
+  if (effectInit == false) {
+    effectInit = true;
+    effectDelay = 10;
+  }
+  
+  CRGB currentColor;
+  CRGB flickerOrange;
+  static int flickerBrightness = 200;
+  int flickerIncrement = random(25) - 12;
+  flickerBrightness += flickerIncrement;
+  if (flickerBrightness < 50) flickerBrightness = 50;
+  if (flickerBrightness > 255) flickerBrightness = 255;
+  flickerOrange = 0xFF6000;
+  flickerOrange.nscale8_video(flickerBrightness);
+  
+  for (byte y = 0; y < 5; y++) {
+    for (byte x = 0; x < 8; x++) {
+      if (bitRead(pumpkinBitmap[y],7-x) == 1) {
+        currentColor = flickerOrange;
+      } else {
+        currentColor = CRGB::Black;
+      }
+      
+      leds[XY(x,y)] = currentColor;
+      leds[XY(15-x,y)] = currentColor;
+    }
+  }
+}
 
 #define analyzerFadeFactor 5
 #define analyzerScaleFactor 1.5
@@ -851,6 +1030,3 @@ void noiseFlyer() {
 
   
 }
-
-
-
