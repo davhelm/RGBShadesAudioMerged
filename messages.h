@@ -1,9 +1,9 @@
 // Scrolling messages
 
-const char string0[] PROGMEM = "Shake Hands With Danger!   ";
-const char string1[] PROGMEM = "Rush into Safety   ";
-const char string2[] PROGMEM = "Slips and falls hurt people   ";
-const char string3[] PROGMEM = "Safety is no accident   ";
+const char string0[] PROGMEM = "message1   ";
+const char string1[] PROGMEM = "message2   ";
+const char string2[] PROGMEM = "message3   ";
+const char string3[] PROGMEM = "message4   ";
 
 const char * const stringArray[] PROGMEM = {
   string0,
