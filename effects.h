@@ -415,7 +415,7 @@ void scrollText(byte message, byte style, CRGB fgColor, CRGB bgColor) {
   // startup tasks
   if (effectInit == false) {
     effectInit = true;
-    effectDelay = 100; //35;
+    effectDelay = 65;//100; //35;
     currentMessageChar = 0;
     currentCharColumn = 0;
     selectFlashString(message);
@@ -476,7 +476,11 @@ void scrollTextOne() {
 }
 
 void scrollTextTwo() {
-  scrollText(2, NORMAL, CRGB::Green, CRGB(0,0,8));
+  scrollText(2, NORMAL, CRGB::Green, CRGB::Black); //CRGB(0,0,8));
+}
+
+void scrollTextThree() {
+  scrollText(3, NORMAL, CRGB::Yellow, CRGB::Black); //CRGB(0,0,8));
 }
 
 // Draw jack-o'-lantern eyes with flickering orange pattern

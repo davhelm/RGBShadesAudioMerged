@@ -43,8 +43,8 @@
 #define CHIPSET     WS2811
 
 // Global maximum brightness value, maximum 255
-#define MAXBRIGHTNESS 64 //72
-#define STARTBRIGHTNESS 2
+#define MAXBRIGHTNESS 64
+#define STARTBRIGHTNESS 1
 
 // Cycle time (milliseconds between pattern changes)
 #define cycleTime 15000
@@ -80,6 +80,10 @@ functionList effectListAudio[] = {
                                  };
 
 functionList effectListNoAudio[] = {
+                                    scrollTextZero,
+                                    scrollTextOne,
+                                    scrollTextTwo,
+                                    scrollTextThree,
                                     shadesOutline,
                                     radiateCenter,
                                     threeSine,
